@@ -6,8 +6,7 @@ import { isAuthenticated, isMessageOwner } from './authorization';
 
 const toCursorHash = string => Buffer.from(string).toString('base64');
 
-const fromCursorHash = string =>
-  Buffer.from(string, 'base64').toString('ascii');
+const fromCursorHash = string => Buffer.from(string, 'base64').toString('ascii');
 
 export default {
   Query: {
@@ -35,33 +34,28 @@ export default {
         edges,
         pageInfo: {
           hasNextPage,
-          endCursor: toCursorHash(
-            edges[edges.length - 1].createdAt.toString(),
-          ),
+          endCursor: toCursorHash(edges[edges.length - 1].createdAt.toString()),
         },
       };
     },
     message: async (parent, { id }, { models }) => {
-      return await models.Message.findById(id);
+      return await models.Message.findByPk(id);
     },
   },
 
   Mutation: {
-    createMessage: combineResolvers(
-      isAuthenticated,
-      async (parent, { text }, { models, me }) => {
-        const message = await models.Message.create({
-          text,
-          userId: me.id,
-        });
+    createMessage: combineResolvers(isAuthenticated, async (parent, { text }, { models, me }) => {
+      const message = await models.Message.create({
+        text,
+        userId: me.id,
+      });
 
-        pubsub.publish(EVENTS.MESSAGE.CREATED, {
-          messageCreated: { message },
-        });
+      pubsub.publish(EVENTS.MESSAGE.CREATED, {
+        messageCreated: { message },
+      });
 
-        return message;
-      },
-    ),
+      return message;
+    }),
 
     deleteMessage: combineResolvers(
       isAuthenticated,

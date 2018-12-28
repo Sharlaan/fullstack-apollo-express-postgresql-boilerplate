@@ -1,16 +1,19 @@
-const message = (sequelize, DataTypes) => {
-  const Message = sequelize.define('message', {
-    text: {
-      type: DataTypes.STRING,
-      validate: { notEmpty: true },
-    },
-  });
+import { Model, STRING } from 'sequelize';
 
-  Message.associate = models => {
-    Message.belongsTo(models.User);
-  };
+export default class Message extends Model {
+  static init(sequelize) {
+    return super.init(
+      {
+        text: {
+          type: STRING,
+          validate: { notEmpty: true },
+        },
+      },
+      { sequelize },
+    );
+  }
 
-  return Message;
-};
-
-export default message;
+  static associate({ User }) {
+    this.belongsTo(User);
+  }
+}

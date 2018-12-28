@@ -1,9 +1,18 @@
-import axios from 'axios';
+import path from 'path';
+import { config } from 'dotenv';
+import { post } from 'axios';
 
-const API_URL = 'http://localhost:8000/graphql';
+// Jest sets NODE_ENV automatically to 'test'
+config({
+  path: path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`),
+});
+
+const { HOST, PORT } = process.env;
+
+const API_URL = `http://${HOST}:${PORT}/graphql`;
 
 export const signIn = async variables =>
-  await axios.post(API_URL, {
+  await post(API_URL, {
     query: `
       mutation ($login: String!, $password: String!) {
         signIn(login: $login, password: $password) {
@@ -14,8 +23,8 @@ export const signIn = async variables =>
     variables,
   });
 
-export const me = async token =>
-  await axios.post(
+export const getMeWithToken = async token =>
+  await post(
     API_URL,
     {
       query: `
@@ -37,8 +46,8 @@ export const me = async token =>
       : null,
   );
 
-export const user = async variables =>
-  axios.post(API_URL, {
+export const getUserById = async variables =>
+  post(API_URL, {
     query: `
       query ($id: ID!) {
         user(id: $id) {
@@ -52,8 +61,8 @@ export const user = async variables =>
     variables,
   });
 
-export const users = async () =>
-  axios.post(API_URL, {
+export const getAllUsers = async () =>
+  post(API_URL, {
     query: `
       {
         users {
@@ -67,7 +76,7 @@ export const users = async () =>
   });
 
 export const signUp = async variables =>
-  axios.post(API_URL, {
+  post(API_URL, {
     query: `
       mutation(
         $username: String!,
@@ -86,8 +95,8 @@ export const signUp = async variables =>
     variables,
   });
 
-export const updateUser = async (variables, token) =>
-  axios.post(
+export const modifyUser = async (variables, token) =>
+  post(
     API_URL,
     {
       query: `
@@ -108,8 +117,8 @@ export const updateUser = async (variables, token) =>
       : null,
   );
 
-export const deleteUser = async (variables, token) =>
-  axios.post(
+export const removeUser = async (variables, token) =>
+  post(
     API_URL,
     {
       query: `

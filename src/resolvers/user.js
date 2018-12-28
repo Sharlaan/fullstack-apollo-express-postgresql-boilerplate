@@ -17,23 +17,16 @@ export default {
       return await models.User.findAll();
     },
     user: async (parent, { id }, { models }) => {
-      return await models.User.findById(id);
+      return await models.User.findByPk(id);
     },
     me: async (parent, args, { models, me }) => {
-      if (!me) {
-        return null;
-      }
-
-      return await models.User.findById(me.id);
+      if (!me) return null;
+      return await models.User.findByPk(me.id);
     },
   },
 
   Mutation: {
-    signUp: async (
-      parent,
-      { username, email, password },
-      { models, secret },
-    ) => {
+    signUp: async (parent, { username, email, password }, { models, secret }) => {
       const user = await models.User.create({
         username,
         email,
@@ -43,17 +36,11 @@ export default {
       return { token: createToken(user, secret, '30m') };
     },
 
-    signIn: async (
-      parent,
-      { login, password },
-      { models, secret },
-    ) => {
+    signIn: async (parent, { login, password }, { models, secret }) => {
       const user = await models.User.findByLogin(login);
 
       if (!user) {
-        throw new UserInputError(
-          'No user found with this login credentials.',
-        );
+        throw new UserInputError('No user found with these login credentials.');
       }
 
       const isValid = await user.validatePassword(password);
@@ -65,22 +52,16 @@ export default {
       return { token: createToken(user, secret, '30m') };
     },
 
-    updateUser: combineResolvers(
-      isAuthenticated,
-      async (parent, { username }, { models, me }) => {
-        const user = await models.User.findById(me.id);
-        return await user.update({ username });
-      },
-    ),
+    updateUser: combineResolvers(isAuthenticated, async (parent, { username }, { models, me }) => {
+      const user = await models.User.findByPk(me.id);
+      return await user.update({ username });
+    }),
 
-    deleteUser: combineResolvers(
-      isAdmin,
-      async (parent, { id }, { models }) => {
-        return await models.User.destroy({
-          where: { id },
-        });
-      },
-    ),
+    deleteUser: combineResolvers(isAdmin, async (parent, { id }, { models }) => {
+      return await models.User.destroy({
+        where: { id },
+      });
+    }),
   },
 
   User: {

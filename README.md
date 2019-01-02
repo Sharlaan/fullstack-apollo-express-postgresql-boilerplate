@@ -4,9 +4,17 @@
 
 A full-fledged Apollo Server with Apollo Client starter project with React and Express. [Read more about it in this tutorial to build it yourself](https://www.robinwieruch.de/graphql-apollo-server-tutorial/).
 
-**This repository is the fullstack Apollo Server with Express and PostgreSQL project. You can find a working client application that can be used with this server in the list below:**
+**Family of universal fullstack repositories:**
+
+Server Applications:
+
+* [Node.js with Express + MongoDB](https://github.com/the-road-to-graphql/fullstack-apollo-express-mongodb-boilerplate)
+* [Node.js with Express + PostgreSQL](https://github.com/the-road-to-graphql/fullstack-apollo-express-postgresql-boilerplate)
+
+Client Applications:
 
 * [React Client](https://github.com/the-road-to-graphql/fullstack-apollo-react-boilerplate)
+* [React Native Client](https://github.com/morenoh149/fullstack-apollo-react-native-boilerplate)
 
 ## Features of Client + Server
 
@@ -34,8 +42,9 @@ A full-fledged Apollo Server with Apollo Client starter project with React and E
 * `touch .env`
 * `npm install`
 * fill out *.env file* (see below)
+* start PostgreSQL database
 * `npm start`
-* optional visit `http://localhost:8000` for GraphQL playground
+* visit `http://localhost:8000` for GraphQL playground
 
 #### .env file
 
@@ -57,7 +66,7 @@ The `SECRET` is just a random string for your authentication. Keep all these inf
 * adjust `test:run-server` npm script with `TEST_DATABASE` environment variable in package.json to match your testing database name
   * to match it from package.json: `createdb mytestdatabase` with psql
 * one terminal: npm run test:run-server
-* second terminal: test:execute-test
+* second terminal: npm run test:execute-test
 
 ## Want to learn more about React + GraphQL + Apollo?
 
